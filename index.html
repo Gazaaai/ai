@@ -1,140 +1,97 @@
-import json
-import requests
-import os 
-os.system('pip install cherrypy ')
-import cherrypy
-class Sin:
-    @cherrypy.expose
-    def index(self):
-        return self.html()
-    def html(self):
-        return """
-        <!DOCTYPE html>
-        <html lang="ar">
-        <head>
-            <meta charset="UTF-8">
-            <title>SIN.COM</title>
-           
-            <style>
-                body {{
-                    font-family: Arial, sans-serif;
-                    background-color: #f4f4f4;
-                    color: #333;
-                    text-align: center;
-                    padding: 50px;
-                }}
-                input[type="text"], input[type="submit"] {{
-                    padding: 10px;
-                    margin: 10px;
-                }}
-            </style>
-        </head>
-        <body>
-        <center>
-        <hr>
-        <mark> <a href="https://t.me/omerislamaker">Devoloper:OMER ABO AKER</a></mark>
-        <hr>
-            <h1>اسال اي سوال في بالك ؟</h1>
-            <form method="post" action="send">
-                <input type="text" name="email">
-                <input type="submit" value="اضغط هنا لارسال الرسالة واستلام الرد">
-            </form>
-        </center>         
-        </body>
-        </html>
-                """
-    @cherrypy.expose
-    @cherrypy.tools.allow(methods=['POST'])
-    def send(self, email):
-    	url = "http://pass-gpt.nowtechai.com/api/v1/pass"
-
-    	payload = json.dumps({
-  "contents": [
-    {
-      "role": "system",
-      "content": "You are All bot, a large language model trained by ChatGPT."
-    },
-    {
-      "role": "user",
-      "content": email,
-    }
-  ]
-})
-
-    	headers = {
-  'User-Agent': "Ktor client",
-  'Connection': "Keep-Alive",
-  'Accept': "application/json",
-  'Accept-Encoding': "gzip",
-  'Content-Type': "application/json",
-
-}
-
-    	r= requests.post(url, data=payload, headers=headers).text
-    	i=r.split('content')
-    	h=0
-    	y=len(i)
-
-    	text=''
-    	for j in range(0,y):
-    		z=r.split('"content":"')[j].split('"')[0].split('data:{')[0]
-    		text+=z
-    		h+=1
-    		if int(h)==int(y):
-    			return text
-    def result(self, text):
-        return f"""
-       <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>a result</title>
+    <title>SIN.COM</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Cairo", sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #fff;
+            text-align: center;
             margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
+            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 90%;
+            max-width: 500px;
         }
         h1 {
-            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            outline: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        input[type="text"]:focus {
+            box-shadow: 0 0 10px #ffd700;
+        }
+        input[type="submit"] {
+            background: #ffd700;
             color: #333;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .result {
+        input[type="submit"]:hover {
+            background: #fff;
+            color: #000;
+        }
+        a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #fff;
+        }
+        footer {
             margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #fafafa;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.9em;
-            color: #777;
+            font-size: 0.8rem;
+            color: #ccc;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>The result of the request</h1>
-        <div class="result">
-            <p>{text}</p>
-        <div class="footer">
-            <p></p>
-        </div>
+        <h1>اسأل أي سؤال في بالك؟</h1>
+        <form method="post" action="#">
+            <input type="text" name="email" placeholder="اكتب سؤالك هنا...">
+            <input type="submit" value="اضغط هنا لإرسال الرسالة واستلام الرد">
+        </form>
+        <footer>
+            <p>المطور: <a href="https://t.me/omerislamaker" target="_blank">OMER ABO AKER</a></p>
+        </footer>
     </div>
 </body>
 </html>
-        """
-if __name__ == '__main__':
-    cherrypy.quickstart(Sin())
