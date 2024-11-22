@@ -66,32 +66,62 @@
             background: #fff;
             color: #000;
         }
-        a {
-            color: #ffd700;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-        a:hover {
-            color: #fff;
-        }
-        footer {
+        .result {
             margin-top: 20px;
-            font-size: 0.8rem;
-            color: #ccc;
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>اسأل أي سؤال في بالك؟</h1>
-        <form method="post" action="#">
-            <input type="text" name="email" placeholder="اكتب سؤالك هنا...">
+        <form id="questionForm">
+            <input type="text" id="userInput" name="email" placeholder="اكتب سؤالك هنا..." required>
             <input type="submit" value="اضغط هنا لإرسال الرسالة واستلام الرد">
         </form>
-        <footer>
-            <p>المطور: <a href="https://t.me/omerislamaker" target="_blank">OMER ABO AKER</a></p>
-        </footer>
+        <div class="result" id="result" style="display: none;">
+            <p id="resultText"></p>
+        </div>
     </div>
+
+    <script>
+        document.getElementById("questionForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const userInput = document.getElementById("userInput").value;
+            const resultDiv = document.getElementById("result");
+            const resultText = document.getElementById("resultText");
+
+            resultText.textContent = "جاري التحميل...";
+            resultDiv.style.display = "block";
+
+            try {
+                const response = await fetch("http://pass-gpt.nowtechai.com/api/v1/pass", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "User-Agent": "Ktor client",
+                        "Accept": "application/json",
+                    },
+                    body: JSON.stringify({
+                        contents: [
+                            { role: "system", content: "You are All bot, a large language model trained by ChatGPT." },
+                            { role: "user", content: userInput }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+                const reply = data.choices[0]?.message?.content || "لم يتم العثور على رد.";
+                resultText.textContent = reply;
+            } catch (error) {
+                resultText.textContent = "حدث خطأ أثناء جلب الرد. حاول مرة أخرى.";
+            }
+        });
+    </script>
 </body>
 </html>
