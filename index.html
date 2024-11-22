@@ -100,6 +100,7 @@
             resultDiv.style.display = "block";
 
             try {
+                // إرسال الطلب إلى الـ API
                 const response = await fetch("http://pass-gpt.nowtechai.com/api/v1/pass", {
                     method: "POST",
                     headers: {
@@ -115,11 +116,20 @@
                     })
                 });
 
+                // التأكد من أن الرد كان ناجحاً
+                if (!response.ok) {
+                    throw new Error("فشل في جلب البيانات من الـ API");
+                }
+
                 const data = await response.json();
-                const reply = data.choices[0]?.message?.content || "لم يتم العثور على رد.";
+                
+                // استخراج محتوى الرد من الـ API
+                const reply = data?.choices[0]?.message?.content || "لم يتم العثور على رد.";
                 resultText.textContent = reply;
             } catch (error) {
+                // في حال حدوث أي خطأ
                 resultText.textContent = "حدث خطأ أثناء جلب الرد. حاول مرة أخرى.";
+                console.error("Error:", error);
             }
         });
     </script>
